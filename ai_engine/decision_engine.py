@@ -1,22 +1,35 @@
-from kafka_module.producer import send_event
-
 def analyze_data(df):
     results = []
 
-    # Trending products
-    trending = df.sort_values(by='Sales Volume', ascending=False).head(5)
+    df['Sales Volume'] = df['Sales Volume'].astype(float)
+    df['section'] = df['section'].str.upper()
 
-    for _, row in trending.iterrows():
-        event = f"Product {row['Product ID']} is trending (Sales: {row['Sales Volume']})"
-        send_event("trending", event)
-        results.append(event)
+    for section in ['MAN', 'WOMAN']:
 
-    # Low sales products (FIXED)
-    low_sales = df.sort_values(by='Sales Volume').head(5)
+        section_df = df[df['section'] == section]
 
-    for _, row in low_sales.iterrows():
-        event = f"Low sales for product {row['Product ID']} (Sales: {row['Sales Volume']})"
-        send_event("low_sales", event)
-        results.append(event)
+        # 🔥 Trending
+        trending = section_df.sort_values(by='Sales Volume', ascending=False).head(5)
+
+        for _, row in trending.iterrows():
+            results.append({
+                "section": section,
+                "type": "Trending",
+                "product_id": row['Product ID'],
+                "product_name": row['name'],
+                "sales": row['Sales Volume']
+            })
+
+        # ⚠ Low Sales
+        low_sales = section_df.sort_values(by='Sales Volume').head(5)
+
+        for _, row in low_sales.iterrows():
+            results.append({
+                "section": section,
+                "type": "Low Sales",
+                "product_id": row['Product ID'],
+                "product_name": row['name'],
+                "sales": row['Sales Volume']
+            })
 
     return results

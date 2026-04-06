@@ -7,8 +7,8 @@ producer = KafkaProducer(
 )
 
 def send_event(topic, message):
-    print(f"Sending → {message}")   # 👈 show in terminal
+    print(f"Sending → {message}")
     producer.send(topic, message)
     producer.flush()
 
-    time.sleep(2)   # ⏳ simulate real-time delay
+    time.sleep(2) 
