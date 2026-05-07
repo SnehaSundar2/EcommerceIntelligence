@@ -32,6 +32,12 @@ def run_pipeline():
             elif r['type'] == "Low Sales":
                 send_event("low_sales", message)
 
+            elif r['type'] == "Anomaly":
+                send_event("anomaly", "🚨 " + message)
+
+            elif r['type'] == "Discount Suggestion":
+                send_event("recommendation", "💡 " + message)
+
         return jsonify({
             "status": "Pipeline executed successfully ✅",
             "total_records": len(data),

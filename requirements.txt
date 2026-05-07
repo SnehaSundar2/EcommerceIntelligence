@@ -3,3 +3,8 @@ flask
 kafka-python
 sqlalchemy
 twilio
+numpy
+scikit-learn
+psycopg2-binary
+fastapi
+uvicorn
